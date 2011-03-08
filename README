@@ -1,0 +1,16 @@
+For an explanation of what this app does, see:
+
+  https://grepular.com/Advertise_Your_Wifi_in_Your_Customers_Kik_Messages
+
+Run the command without any arguments for a list of options.
+
+Options:
+
+  --help / -h : Display this information, and then exit.
+  --debug     : Prints out the entire XMPP communication as it happens
+  --port      : Required - The port to listen on
+  --no-repeat : Required - Don't add the signature to a message if it has already
+                been added to one from a sender, to a recipient, within this
+                period of time (seconds).
+  --signature : Required - The signature text to add to the end of the Kik message.
+                It will be precedeed by the separator " -- "
