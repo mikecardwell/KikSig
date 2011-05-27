@@ -25,6 +25,7 @@ use warnings;
 use CGI;
 use IO::Select;
 use IO::Socket;
+use IO::Socket::SSL;
 
 ## IP address of Kiks XMPP service
 	my $kik_xmpp_ip = '184.106.41.33';
@@ -36,7 +37,7 @@ use IO::Socket;
 	help() unless @ARGV;
 
 ## Parse arguments
-	my( $debug, $port, $signature, $norepeat );
+	my( $debug, $port, $signature, $norepeat, $ssl_cert, $ssl_key );
 	{
 		my @args = @ARGV;
 		while( @args ){
@@ -54,18 +55,26 @@ use IO::Socket;
 			} elsif( $key eq '--signature' ){
 				$signature = shift @args;
 				die "Invalid value for --signature\n" unless defined $signature;
+			} elsif( $key eq '--ssl-cert' ){
+				$ssl_cert = shift @args;
+				die "No such file: $ssl_cert\n" unless -f $ssl_cert;
+			} elsif( $key eq '--ssl-key' ){
+				$ssl_key = shift @args;
+				die "No such file: $ssl_key\n" unless -f $ssl_key;
 			}
 		}
 		die "Missing --port\n"      unless defined $port;
 		die "Missing --signature\n" unless defined $signature;
 		die "Missing --no-repeat\n" unless defined $norepeat;
+		die "Missing --ssl-cert\n"  unless defined $ssl_cert;
+		die "Missing --ssl-key\n"   unless defined $ssl_key;
 	}
 
 ## Root check
         die "Must run as the root user so iptables rules can be added/removed\n" if $<;
 
 ## Set up a listener
-	my $lsn = new IO::Socket::INET( ReuseAddr => 1, Listen => 10, LocalPort => $port ) or die $!;
+	my $lsn = new IO::Socket::SSL( ReuseAddr => 1, Listen => 10, LocalPort => $port, SSL_cert_file => $ssl_cert, SSL_key_file => $ssl_key ) or die $!;
 	my $sel = new IO::Select( $lsn );
 
 ## Somewhere to cache information about the connections
@@ -83,7 +92,7 @@ use IO::Socket;
 		foreach my $fh ( @ready ){
 			if( $fh == $lsn ){
        				my $local = $lsn->accept;
-				my $remote = new IO::Socket::INET( PeerAddr => $kik_xmpp_ip, PeerPort => 5222 );
+				my $remote = new IO::Socket::SSL( PeerAddr => $kik_xmpp_ip, PeerPort => 5223 );
 				$sel->add( $_ ) foreach( $local, $remote );
 
 				$socks{$local}  = { type => 'local',  other => $remote };
@@ -153,7 +162,7 @@ sub iptables {
 	return if $status == $iptables_done;
 	$iptables_done = $status;
 
-	my $command = sprintf( 'iptables -t nat -%s PREROUTING -p tcp -d %s --dport 5222 -j REDIRECT --to-port %s',
+	my $command = sprintf( 'iptables -t nat -%s PREROUTING -p tcp -d %s --dport 5223 -j REDIRECT --to-port %s',
 		$status ? 'I' : 'D',
 		$kik_xmpp_ip,
 		$port
@@ -175,6 +184,12 @@ Usage: kiksig.pl --port 12345 --no-repeat 86400 --signature "Test Signature"
               period of time (seconds).
 --signature : Required - The signature text to add to the end of the Kik message.
               It will be precedeed by the separator " -- "
+--ssl-cert  : Required - Path to the SSL certificate
+--ssk-key   : Required - Path to the SSL key
+
+Although Kik was updated to use SSL, breaking this script, the update didn't
+include code to perform certificate verification. So I updated this script to
+accept any old SSL cert/key pair of your choice, and it now works again.
 END_HELP
 	exit 0;
 }
