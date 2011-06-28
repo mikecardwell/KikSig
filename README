@@ -1,3 +1,16 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                                              !
+! IMPORTANT:                                                                   !
+!                                                                              !
+! On Monday 27th of June 2011, Kik 5.1 was released. One of the changes was to !
+! perform certificate verification on the SSL connection. So it is no longer   !
+! possible to MITM Kik. This change breaks KikSig.pl, and is a good thing.     !
+!                                                                              !
+! Even though this code no longer works (and can't be made to), I will leave   !
+! it online as a learning aid to others.                                       !
+!                                                                              !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 For an explanation of what this app does, see:
 
   https://grepular.com/Advertise_Your_Wifi_in_Your_Customers_Kik_Messages
