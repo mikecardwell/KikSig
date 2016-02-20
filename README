@@ -1,29 +1,3 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                                                                              !
-! IMPORTANT:                                                                   !
-!                                                                              !
-! On Monday 27th of June 2011, Kik 5.1 was released. One of the changes was to !
-! perform certificate verification on the SSL connection. So it is no longer   !
-! possible to MITM Kik. This change breaks KikSig.pl, and is a good thing.     !
-!                                                                              !
-! Even though this code no longer works (and can't be made to), I will leave   !
-! it online as a learning aid to others.                                       !
-!                                                                              !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+This project has moved to Gitlab:
 
-For an explanation of what this app does, see:
-
-  https://grepular.com/Advertise_Your_Wifi_in_Your_Customers_Kik_Messages
-
-Run the command without any arguments for a list of options.
-
-Options:
-
-  --help / -h : Display this information, and then exit.
-  --debug     : Prints out the entire XMPP communication as it happens
-  --port      : Required - The port to listen on
-  --no-repeat : Required - Don't add the signature to a message if it has already
-                been added to one from a sender, to a recipient, within this
-                period of time (seconds).
-  --signature : Required - The signature text to add to the end of the Kik message.
-                It will be precedeed by the separator " -- "
+https://gitlab.com/mikecardwell/KikSig
